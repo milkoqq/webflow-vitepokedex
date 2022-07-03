@@ -1,5 +1,3 @@
-console.log('-- connected --')
+console.log('------- connected ----------')
 
-setTimeout(()=>{
-    console.log(`2seconds passed`)
-},2000)
+const imgPokemon = document.querySelector('.screen-mid_poke-display')
