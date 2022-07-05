@@ -69,6 +69,8 @@ async function getPokemon(id) {
         if (!res.ok) new Error(`Couldn't Fetch anything bitch`)
         const data = await res.json()
         pokemon = data
+
+
         // console.log(pokemon)
         updateUI()
         clearInterval
@@ -89,7 +91,7 @@ function updateUI() {
     labelPokemonName.textContent = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
     labelPokemonCounter.classList.remove('hide')
     labelPokemonCounter.textContent = id.toString().padStart(3, '0')
-
+    // labelPokemonDesc.textContent = pokemon
     setLights()
 
 }
@@ -114,21 +116,26 @@ btnNums.forEach(btn => {
     btn.setAttribute('data-value', btnNums.indexOf(btn))
 })
 
+const wait = function (seconds) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, seconds * 1000);
+    });
+};
 
 let numPokemon = ''; //global Pokemon Number
 
 containerBtnsBlue.addEventListener('click', (e) => {
 
     numPokemon += e.target.dataset.value
-    console.log(`Numpokemon Value: ${numPokemon}`)
-    console.log(`length: ${numPokemon.length}`)
-    if (numPokemon.length === 3) {
+    // console.log(`numPokemon Value: ${numPokemon}`)
+    // console.log(`length: ${numPokemon.length}`)
+    labelPokemonDesc.textContent = `Seeking pokemon...... ${numPokemon}`
+    wait(2).then(() => {
+        if (numPokemon.length > 3) numPokemon = ''
         getPokemon(+numPokemon)
         numPokemon = ''
-    }
-    if (numPokemon.length === 2) {
-        getPokemon(+numPokemon.padStart(3, '0'))
-    }
+    })
+
 })
 
 
