@@ -1,15 +1,17 @@
 import { defineConfig } from 'vite'
-import eslintPlugin from 'vite-plugin-eslint'
+// import eslintPlugin from 'vite-plugin-eslint'
 
 // vite.config.js
 export default defineConfig({
-  plugins: [eslintPlugin()],
+  // eslintPlugin() (μέσα στο plugins)
+  plugins: [],
   server: {
     host: 'localhost',
     cors: '*',
     hmr: {
       host: 'localhost',
       protocol: 'ws',
+      overlay: false
     },
   },
   build: {
