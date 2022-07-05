@@ -73,7 +73,6 @@ async function getPokemon(id) {
 
         // console.log(pokemon)
         updateUI()
-        clearInterval
     }
     catch (e) {
         console.log(e)
@@ -85,7 +84,7 @@ getCount()
 
 let lights;
 function updateUI() {
-
+    clearInterval(lights)
     let id = pokemon.id
     imgPokemon.setAttribute('src', pokemon?.sprites?.front_default)
     labelPokemonName.textContent = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
@@ -121,7 +120,7 @@ const wait = function (seconds) {
         setTimeout(resolve, seconds * 1000);
     });
 };
-
+let lastPokemon = '898' // for now
 let numPokemon = ''; //global Pokemon Number
 
 containerBtnsBlue.addEventListener('click', (e) => {
