@@ -2,8 +2,10 @@
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
 const labelPokemonCounter = document.querySelector('.screen-mid_poke-number-display')
 const labelPokemonName = document.querySelector('.pokedex-left_label-pokemon-name')
+const labelPokemonDesc = document.querySelector('.poke_right-description-text')
 const pokedexLights = document.querySelectorAll('.pokedex_light')
 const pokedexDetector = document.querySelector('.pokedex_detector')
+const containerBtnsBlue = document.querySelector('#containerBtnsBlue')
 
 
 
@@ -50,7 +52,7 @@ async function getCount() {
         if (!res.ok) throw new Error(`Couldn't Fetch anything bitch`)
         const data = await res.json()
         totalPokemons = data.count
-        console.log(`-----> Count of total Pokemons ${totalPokemons}`)
+        // console.log(`-----> Count of total Pokemons ${totalPokemons}`)
 
 
     }
@@ -64,10 +66,10 @@ async function getPokemon(id) {
     try {
         const url = 'https://pokeapi.co/api/v2/pokemon/'
         const res = await fetch(`${url}${id}`)
-        if (!res.ok) throw new Error(`Couldn't Fetch anything bitch`)
+        if (!res.ok) new Error(`Couldn't Fetch anything bitch`)
         const data = await res.json()
         pokemon = data
-        console.log(pokemon)
+        // console.log(pokemon)
         updateUI()
         clearInterval
     }
@@ -78,7 +80,7 @@ async function getPokemon(id) {
 }
 
 getCount()
-getPokemon(4)
+
 let lights;
 function updateUI() {
 
@@ -91,8 +93,6 @@ function updateUI() {
     setLights()
 
 }
-
-console.log(pokedexLights)
 
 
 function setLights() {
@@ -107,4 +107,28 @@ function setLights() {
     }
 
 }
+const btnNum = document.querySelector('.poke_right-btn-blue')
+const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
+
+btnNums.forEach(btn => {
+    btn.setAttribute('data-value', btnNums.indexOf(btn))
+})
+
+
+let numPokemon = ''; //global Pokemon Number
+
+containerBtnsBlue.addEventListener('click', (e) => {
+
+    numPokemon += e.target.dataset.value
+    console.log(`Numpokemon Value: ${numPokemon}`)
+    console.log(`length: ${numPokemon.length}`)
+    if (numPokemon.length === 3) {
+        getPokemon(+numPokemon)
+        numPokemon = ''
+    }
+    if (numPokemon.length === 2) {
+        getPokemon(+numPokemon.padStart(3, '0'))
+    }
+})
+
 
