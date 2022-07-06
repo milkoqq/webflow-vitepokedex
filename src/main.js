@@ -84,20 +84,31 @@ const wait = function (seconds) {
     });
 };
 
+<<<<<<< Updated upstream
 btnNums.forEach(btn => {
     btn.setAttribute('data-value', btnNums.indexOf(btn))
 })
 
+=======
+
+let numPokemon = ''; //global Pokemon Number
+>>>>>>> Stashed changes
 
 containerBtnsBlue.addEventListener('click', (e) => {
 
     numPokemon += e.target.dataset.value
     labelPokemonDesc.textContent = `Seeking pokemon...... ${numPokemon}`
-    wait(2).then(() => {
-        if (numPokemon.length > 3) numPokemon = ''
-        getPokemon(+numPokemon)
-        numPokemon = ''
-    })
+    wait(2)
+        .then(() => {
+            if (numPokemon.length > 3) {
+                labelPokemonDesc.textContent = 'Invalid Pokemon ID.....'
+                numPokemon = ''
+
+            }
+            getPokemon(+numPokemon)
+            numPokemon = ''
+        })
+        .catch((e) => console.log(e))
 
 })
 
