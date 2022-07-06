@@ -1,6 +1,7 @@
 // const { type } = require("jquery")
 
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
+const imgPokemonType = document.querySelector('.pokemon_type-img')
 
 const labelPokemonCounter = document.querySelector('.screen-mid_poke-number-display')
 const labelPokemonName = document.querySelector('.pokedex-left_label-pokemon-name')
@@ -15,31 +16,35 @@ const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //
 
 
 let pokemon; // Global Pokemon Object
+let pokemonDesc;
 let lights;
 let lastPokemon = '898' // probably, for now.
 let numPokemon = ''; // Global Pokemon Number
 let varTypeWrite = false // Global state of typewriting. Allows for typewriting effect to finish before next event.
 
 // Stuff that should happen on initialization.
-function init() {
-    wait(0.3)
-        .then(() => {
-            typeWrite('Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..', 38, labelPokemonDesc)
-        })
 
+function init() {
+    wait(4)
+        .then(() => {
+            typeWrite('Hello there! Welcome to the world of pokémon!💖 My name is Prof. Oak! This is your pokédex a tool to find any pokémon..', 38, labelPokemonDesc)
+        })
 }
+
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+    return fetch(url).then(response => {
+        if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+        return response.json();
+    });
+};
 
 async function getPokemon(id) {
 
     try {
-        const url = 'https://pokeapi.co/api/v2/pokemon/'
-        const res = await fetch(`${url}${id}`)
-        if (!res.ok) new Error(`Couldn't Fetch anything bitch`)
-        const data = await res.json()
-        pokemon = data
-
-
-        // console.log(pokemon)
+        pokemon = await getJSON(`https://pokeapi.co/api/v2/pokemon/${id}`, `Couldn't Fetch Pokemon`)
+        let pokemonSpecies = await getJSON(`https://pokeapi.co/api/v2/pokemon-species/${id}`, `Couldn't Fetch Description`)
+        pokemonDesc = pokemonSpecies.flavor_text_entries[0].flavor_text
         updateUI()
     }
     catch (e) {
@@ -55,7 +60,7 @@ function updateUI() {
     labelPokemonName.textContent = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
     labelPokemonCounter.classList.remove('hide')
     labelPokemonCounter.textContent = id.toString().padStart(3, '0')
-    // labelPokemonDesc.textContent = pokemon
+    typeWrite(String(pokemonDesc), 15, labelPokemonDesc)
     setLights()
 
 }
@@ -93,7 +98,7 @@ containerBtnsBlue.addEventListener('click', (e) => {
     wait(2)
         .then(() => {
             if (numPokemon.length > 3) {
-                labelPokemonDesc.textContent = 'Pokémon Not Found......'
+                labelPokemonDesc.textContent = 'Pokémon Not Found...... Try again...'
                 numPokemon = ''
 
             }
