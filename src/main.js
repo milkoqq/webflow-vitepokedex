@@ -1,3 +1,4 @@
+// const { type } = require("jquery")
 
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
 
@@ -12,26 +13,21 @@ const containerBtnsBlue = document.querySelector('#containerBtnsBlue')
 const btnNum = document.querySelector('.poke_right-btn-blue')
 const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
 
-function init() {
-    labelPokemonCounter.classList.add('hide')
-    // labelPokemonDesc.textContent = 'Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..'
-    typeWrite('Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..', labelPokemonDesc, 20)
-}
-
-function typeWrite(str, element, speed) {
-    let i = 0;
-    if (i < str.length) {
-        element.innerHTML += str.charAt(i);
-        i++;
-        setTimeout(typeWrite, speed);
-    }
-}
-
 
 let pokemon; // Global Pokemon Object
 let lights;
 let lastPokemon = '898' // probably, for now.
 let numPokemon = ''; // Global Pokemon Number
+let varTypeWrite = false // Global state of typewriting. Allows for typewriting effect to finish before next event.
+
+// Stuff that should happen on initialization.
+function init() {
+    wait(0.3)
+        .then(() => {
+            typeWrite('Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..', 38, labelPokemonDesc)
+        })
+
+}
 
 async function getPokemon(id) {
 
@@ -84,24 +80,20 @@ const wait = function (seconds) {
     });
 };
 
-<<<<<<< Updated upstream
 btnNums.forEach(btn => {
     btn.setAttribute('data-value', btnNums.indexOf(btn))
 })
 
-=======
-
-let numPokemon = ''; //global Pokemon Number
->>>>>>> Stashed changes
 
 containerBtnsBlue.addEventListener('click', (e) => {
-
+    if (varTypeWrite) return
     numPokemon += e.target.dataset.value
-    labelPokemonDesc.textContent = `Seeking pokemon...... ${numPokemon}`
+    labelPokemonDesc.textContent = ''
+    labelPokemonDesc.textContent = `Seeking pokémon...... ${numPokemon}`
     wait(2)
         .then(() => {
             if (numPokemon.length > 3) {
-                labelPokemonDesc.textContent = 'Invalid Pokemon ID.....'
+                labelPokemonDesc.textContent = 'Invalid pokémon ID.....'
                 numPokemon = ''
 
             }
@@ -113,4 +105,23 @@ containerBtnsBlue.addEventListener('click', (e) => {
 })
 
 
+
+//Typewriting effect as needed! :)
+
+function typeWrite(str, speed, element) {
+    varTypeWrite = true
+    element.textContent = ''
+    let i = 0;
+    function typer() {
+        if (i < str.length) {
+            element.textContent += str.charAt(i);
+            i++;
+            setTimeout(typer, speed);
+        }
+        element.textContent.length === str.length ? varTypeWrite = false : varTypeWrite = true // Guard clause
+    }
+    typer()
+}
+
 init()
+
