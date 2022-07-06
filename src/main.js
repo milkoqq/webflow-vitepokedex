@@ -1,66 +1,38 @@
 
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
+
 const labelPokemonCounter = document.querySelector('.screen-mid_poke-number-display')
 const labelPokemonName = document.querySelector('.pokedex-left_label-pokemon-name')
 const labelPokemonDesc = document.querySelector('.poke_right-description-text')
+
 const pokedexLights = document.querySelectorAll('.pokedex_light')
 const pokedexDetector = document.querySelector('.pokedex_detector')
+
 const containerBtnsBlue = document.querySelector('#containerBtnsBlue')
+const btnNum = document.querySelector('.poke_right-btn-blue')
+const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
 
+function init() {
+    labelPokemonCounter.classList.add('hide')
+    // labelPokemonDesc.textContent = 'Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..'
+    typeWrite('Hello there! Welcome to the world of pokémon! My name is Oak! This is your pokédex a tool to find any pokémon..', labelPokemonDesc, 20)
+}
 
-
-// const pokemons = []
-// const getPokemon = async (num) => {
-//     try {
-//         //Setup a mini fetch-timer.
-//         let time = 0;
-//         let intervalFetch = setInterval(() => time++, 1);
-//         intervalFetch;
-
-//         //Fetch Pokemons URL
-//         const url = `https://pokeapi.co/api/v2/pokemon/`;
-
-//         //Fetch pokemons and push into array
-//         for (let i = 1; i <= num; i++) {
-//             const res = await fetch(`${url}${i}`);
-//             const data = await res.json();
-//             pokemons.push(data);
-//         }
-
-//         //Log fetch time in console.
-//         clearInterval(intervalFetch);
-//         console.log(`Pokemons Fetched! in ${(time / 1000).toFixed(2)} seconds.`);
-//         console.log(pokemons)
-
-
-
-//     } catch (err) {
-//         new Error(err, "NOT gonna catch them all today.");
-//     }
-// };
-
-// Get all Pokemons Count, so you know last Pokemon.
-labelPokemonCounter.classList.add('hide')
-let totalPokemons;
-
-async function getCount() {
-
-    try {
-        const url = 'https://pokeapi.co/api/v2/pokemon/'
-
-        const res = await fetch(url)
-        if (!res.ok) throw new Error(`Couldn't Fetch anything bitch`)
-        const data = await res.json()
-        totalPokemons = data.count
-        // console.log(`-----> Count of total Pokemons ${totalPokemons}`)
-
-
-    }
-    catch (e) {
-        console.log(e)
+function typeWrite(str, element, speed) {
+    let i = 0;
+    if (i < str.length) {
+        element.innerHTML += str.charAt(i);
+        i++;
+        setTimeout(typeWrite, speed);
     }
 }
-let pokemon;
+
+
+let pokemon; // Global Pokemon Object
+let lights;
+let lastPokemon = '898' // probably, for now.
+let numPokemon = ''; // Global Pokemon Number
+
 async function getPokemon(id) {
 
     try {
@@ -80,9 +52,6 @@ async function getPokemon(id) {
 
 }
 
-getCount()
-
-let lights;
 function updateUI() {
     clearInterval(lights)
     let id = pokemon.id
@@ -108,26 +77,21 @@ function setLights() {
     }
 
 }
-const btnNum = document.querySelector('.poke_right-btn-blue')
-const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
-
-btnNums.forEach(btn => {
-    btn.setAttribute('data-value', btnNums.indexOf(btn))
-})
 
 const wait = function (seconds) {
     return new Promise(function (resolve) {
         setTimeout(resolve, seconds * 1000);
     });
 };
-let lastPokemon = '898' // for now
-let numPokemon = ''; //global Pokemon Number
+
+btnNums.forEach(btn => {
+    btn.setAttribute('data-value', btnNums.indexOf(btn))
+})
+
 
 containerBtnsBlue.addEventListener('click', (e) => {
 
     numPokemon += e.target.dataset.value
-    // console.log(`numPokemon Value: ${numPokemon}`)
-    // console.log(`length: ${numPokemon.length}`)
     labelPokemonDesc.textContent = `Seeking pokemon...... ${numPokemon}`
     wait(2).then(() => {
         if (numPokemon.length > 3) numPokemon = ''
@@ -138,3 +102,4 @@ containerBtnsBlue.addEventListener('click', (e) => {
 })
 
 
+init()
