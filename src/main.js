@@ -93,7 +93,7 @@ containerBtnsBlue.addEventListener('click', (e) => {
     wait(2)
         .then(() => {
             if (numPokemon.length > 3) {
-                labelPokemonDesc.textContent = 'Invalid pokémon ID.....'
+                labelPokemonDesc.textContent = 'Pokémon Not Found......'
                 numPokemon = ''
 
             }
