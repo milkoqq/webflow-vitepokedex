@@ -1,5 +1,6 @@
 // const { type } = require("jquery")
 
+// DOM Manipulators
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
 const imgPokemonType = document.querySelector('.pokemon_type-img')
 
@@ -19,7 +20,9 @@ const btnBottom = document.querySelector('#box_cross-bottom')
 const btnLeft = document.querySelector('#box_cross-left')
 const btnRight = document.querySelector('#box_cross-right')
 
-let frontImg = false
+
+// Global Variables
+let isFrontSprite = false
 let pokemonFrontSprite;
 let pokemonBackSprite;
 let pokemon; // Global Pokemon Object
@@ -32,7 +35,6 @@ let numPokemon = ''; // Global Pokemon Number
 let varTypeWrite = false // Global state of typewriting. Allows for typewriting effect to finish before next event.
 
 // Stuff that should happen on initialization.
-
 function init() {
     wait(4)
         .then(() => {
@@ -40,6 +42,7 @@ function init() {
         })
 }
 
+// One JSON function to get em all.
 const getJSON = function (url, errorMsg = 'Something went wrong') {
     return fetch(url).then(response => {
         if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
@@ -48,8 +51,8 @@ const getJSON = function (url, errorMsg = 'Something went wrong') {
     });
 };
 
+// Fetching Pokemon function
 async function getPokemon(id) {
-
     try {
         pokemon = await getJSON(`https://pokeapi.co/api/v2/pokemon/${id}`, `Couldn't Fetch Pokemon`)
         let pokemonSpecies = await getJSON(`https://pokeapi.co/api/v2/pokemon-species/${id}`, `Couldn't Fetch Description`)
@@ -67,10 +70,11 @@ async function getPokemon(id) {
 
 }
 
+// Updating UI
 function updateUI() {
     clearInterval(lights)
     let id = pokemon.id
-    frontImg = true
+    isFrontSprite = true
     imgPokemon.setAttribute('src', pokemon?.sprites?.front_default)
     labelPokemonName.textContent = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
     labelPokemonCounter.classList.remove('hide')
@@ -81,7 +85,7 @@ function updateUI() {
 
 }
 
-
+// Setting some CSS interactions
 function setLights() {
     for (let i = 0; i < pokedexLights.length; i++) {
 
@@ -95,12 +99,14 @@ function setLights() {
 
 }
 
+// Promisifying setTimeout for control.
 const wait = function (seconds) {
     return new Promise(function (resolve) {
         setTimeout(resolve, seconds * 1000);
     });
 };
 
+// DOM data-value setter
 btnNums.forEach(btn => {
     btn.setAttribute('data-value', btnNums.indexOf(btn))
 })
@@ -187,17 +193,18 @@ function setAsset(type) {
     }
 }
 
-//Randomize button!
+// Random Pokemon handler button!
 btnRandom.addEventListener('click', () => {
     getPokemon(randomPokemon(1, lastPokemon))
 
 })
 
+// Random fetch function
 function randomPokemon(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
+// Cross Buttons Prev/Next & Front/Back Sprites!
 btnUp.addEventListener('click', () => {
     wait(2)
         .then(() => lastPokemonId === 1 ? null : getPokemon(lastPokemonId - 1))
@@ -208,13 +215,16 @@ btnBottom.addEventListener('click', () => {
 
 btnLeft.addEventListener('click', () => {
     if (!lastPokemonId) return
-    frontImg === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
-    frontImg = !frontImg
+    isFrontSprite === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
+    isFrontSprite = !isFrontSprite
 })
+
 btnRight.addEventListener('click', () => {
     if (!lastPokemonId) return
-    frontImg === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
-    frontImg = !frontImg
+    isFrontSprite === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
+    isFrontSprite = !isFrontSprite
 })
+
+// Initialization
 init()
 
