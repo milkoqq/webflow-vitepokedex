@@ -34,7 +34,7 @@ let varTypeWrite = false // Global state of typewriting. Allows for typewriting 
 // Stuff that should happen on initialization.
 
 function init() {
-    wait(3)
+    wait(4)
         .then(() => {
             typeWrite('Hello there! Welcome to the world of pokémon!💖 My name is Prof. Oak! This is your pokédex a tool to find any pokémon..', 38, labelPokemonDesc)
         })
