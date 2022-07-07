@@ -92,11 +92,15 @@ containerBtnsBlue.addEventListener('click', (e) => {
     labelPokemonDesc.textContent = `Seeking pokémon...... ${numPokemon}`
     wait(2)
         .then(() => {
+            console.log(numPokemon)
+            console.log(numPokemon.length)
             if (numPokemon.length > 3) {
-                labelPokemonDesc.textContent = 'Invalid pokémon ID.....'
+                // if ((numPokemon.length > 3) || (Number(numPokemon) < 1) || (Number(numPokemon) > 898)) {
+                labelPokemonDesc.textContent = 'Pokémon Not Found......'
                 numPokemon = ''
 
             }
+
             getPokemon(+numPokemon)
             numPokemon = ''
         })
@@ -105,8 +109,6 @@ containerBtnsBlue.addEventListener('click', (e) => {
 })
 
 
-
-//Typewriting effect as needed! :)
 
 function typeWrite(str, speed, element) {
     varTypeWrite = true
