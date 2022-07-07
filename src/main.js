@@ -19,12 +19,15 @@ const btnBottom = document.querySelector('#box_cross-bottom')
 const btnLeft = document.querySelector('#box_cross-left')
 const btnRight = document.querySelector('#box_cross-right')
 
-
+let frontImg = false
+let pokemonFrontSprite;
+let pokemonBackSprite;
 let pokemon; // Global Pokemon Object
-let pokemonDesc;
+let pokemonDesc; //Global Pokemon Description
 let pokemonType = ''
 let lights;
-let lastPokemon = '898' // probably, for now.
+let lastPokemon = 898 // probably, for now.
+let lastPokemonId;
 let numPokemon = ''; // Global Pokemon Number
 let varTypeWrite = false // Global state of typewriting. Allows for typewriting effect to finish before next event.
 
@@ -51,7 +54,11 @@ async function getPokemon(id) {
         pokemon = await getJSON(`https://pokeapi.co/api/v2/pokemon/${id}`, `Couldn't Fetch Pokemon`)
         let pokemonSpecies = await getJSON(`https://pokeapi.co/api/v2/pokemon-species/${id}`, `Couldn't Fetch Description`)
         let pokemonInEn = pokemonSpecies.flavor_text_entries.find(entry => entry.language.name === 'en')
+        lastPokemonId = pokemon.id
         pokemonDesc = pokemonInEn.flavor_text
+        pokemonFrontSprite = pokemon?.sprites?.front_default
+        pokemonBackSprite = pokemon?.sprites?.back_default
+
         updateUI()
     }
     catch (e) {
@@ -63,6 +70,7 @@ async function getPokemon(id) {
 function updateUI() {
     clearInterval(lights)
     let id = pokemon.id
+    frontImg = true
     imgPokemon.setAttribute('src', pokemon?.sprites?.front_default)
     labelPokemonName.textContent = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
     labelPokemonCounter.classList.remove('hide')
@@ -97,30 +105,25 @@ btnNums.forEach(btn => {
     btn.setAttribute('data-value', btnNums.indexOf(btn))
 })
 
-
+//Fetch Pokemon on Click. 
 containerBtnsBlue.addEventListener('click', (e) => {
     if (varTypeWrite) return
-    debugger;
-    console.log(`NumPokemon`, numPokemon)
     numPokemon += e.target.dataset.value
-    console.log(`NumPokemon`, numPokemon)
     labelPokemonDesc.textContent = ''
     labelPokemonDesc.textContent = `Seeking pokémon...... ${numPokemon}`
+
     wait(2)
         .then(() => {
-            console.log(`NumPokemon`, numPokemon)
-            console.log(numPokemon.length)
-            if (numPokemon.length > 3) {
+            if ((numPokemon.length > 3) || (numPokemon === '0') || (+numPokemon > lastPokemon)) {
                 labelPokemonDesc.textContent = 'Pokémon Not Found...... Try again...'
                 numPokemon = ''
 
             }
-
+            if (numPokemon.length === 0) return
             getPokemon(+numPokemon)
             numPokemon = ''
         })
         .catch((e) => console.log(e))
-
 })
 
 
@@ -140,6 +143,7 @@ function typeWrite(str, speed, element) {
     typer()
 }
 
+//Inserting assets according to type.
 function setAsset(type) {
     switch (type) {
         case 'normal':
@@ -183,8 +187,9 @@ function setAsset(type) {
     }
 }
 
+//Randomize button!
 btnRandom.addEventListener('click', () => {
-    getPokemon(randomPokemon(0, 889))
+    getPokemon(randomPokemon(1, lastPokemon))
 
 })
 
@@ -193,8 +198,23 @@ function randomPokemon(min, max) {
 }
 
 
-// btnUp.addEventListener('click', () => {
-//     getPokemon(numPokemon--)
-// })
+btnUp.addEventListener('click', () => {
+    wait(2)
+        .then(() => lastPokemonId === 1 ? null : getPokemon(lastPokemonId - 1))
+})
+btnBottom.addEventListener('click', () => {
+    wait(2).then(() => lastPokemonId === lastPokemon ? null : getPokemon(lastPokemonId + 1))
+})
+
+btnLeft.addEventListener('click', () => {
+    if (!lastPokemonId) return
+    frontImg === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
+    frontImg = !frontImg
+})
+btnRight.addEventListener('click', () => {
+    if (!lastPokemonId) return
+    frontImg === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
+    frontImg = !frontImg
+})
 init()
 
