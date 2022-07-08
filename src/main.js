@@ -1,24 +1,27 @@
 // const { type } = require("jquery")
 
 // DOM Manipulators
-const imgPokemon = document.querySelector('.screen-mid_poke-display')
-const imgPokemonType = document.querySelector('.pokemon_type-img')
+const imgPokemon = document.querySelector('.main__mid-display-img')
+const imgPokemonType = document.querySelector('.pokemon__type-img')
 
+// DOM / Text Labels
 const labelPokemonCounter = document.querySelector('.main__mid-display-pokeid')
 const labelPokemonName = document.querySelector('.main__pokemon-name-txt')
-const labelPokemonDesc = document.querySelector('.poke_right-description-text')
+const labelPokemonDesc = document.querySelector('.pokedex__right-description')
 
 const pokedexLights = document.querySelectorAll('.pokedex__light')
 const pokedexDetector = document.querySelector('.main__top-detector')
 
-const containerBtnsBlue = document.querySelector('#containerBtnsBlue')
-const btnNum = document.querySelector('.poke_right-btn-blue')
-const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
-const btnRandom = document.querySelector('.pokedex_random-btn')
-const btnUp = document.querySelector('#cross_box-top')
-const btnBottom = document.querySelector('#box_cross-bottom')
-const btnLeft = document.querySelector('#box_cross-left')
-const btnRight = document.querySelector('#box_cross-right')
+// DOM / Buttons
+const containerBtnsBlue = document.querySelector('.pokedex__right-btn-wrapper')
+const btnNum = document.querySelector('.pokedex__right-btn-num')
+const btnNums = Array.from(document.querySelectorAll('.pokedex__right-btn-num')) //nodelist doesn't have indexof 
+const btnRandom = document.querySelector('.pokedex__random')
+const btnUp = document.querySelector('#cross__box-top')
+const btnRight = document.querySelector('#cross__box-right')
+const btnBottom = document.querySelector('#cross__box-bottom')
+const btnLeft = document.querySelector('#cross__box-left')
+
 
 
 // Global Variables
@@ -195,13 +198,20 @@ function setAsset(type) {
 
 // Random Pokemon handler button!
 btnRandom.addEventListener('click', () => {
-    getPokemon(randomPokemon(1, lastPokemon))
+    wait(2).then(() => getPokemon(randomPokemon(1, lastPokemon)))
 
 })
 
 // Random fetch function
 function randomPokemon(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Change Sprite front-to-back & vice-verca
+function changeSpriteSide() {
+    if (!lastPokemonId) return
+    isFrontSprite === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
+    isFrontSprite = !isFrontSprite
 }
 
 // Cross Buttons Prev/Next & Front/Back Sprites!
@@ -214,15 +224,11 @@ btnBottom.addEventListener('click', () => {
 })
 
 btnLeft.addEventListener('click', () => {
-    if (!lastPokemonId) return
-    isFrontSprite === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
-    isFrontSprite = !isFrontSprite
+    changeSpriteSide()
 })
 
 btnRight.addEventListener('click', () => {
-    if (!lastPokemonId) return
-    isFrontSprite === true ? imgPokemon.setAttribute('src', pokemonBackSprite) : imgPokemon.setAttribute('src', pokemonFrontSprite)
-    isFrontSprite = !isFrontSprite
+    changeSpriteSide()
 })
 
 // Initialization
