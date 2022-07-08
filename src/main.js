@@ -4,18 +4,18 @@
 const imgPokemon = document.querySelector('.screen-mid_poke-display')
 const imgPokemonType = document.querySelector('.pokemon_type-img')
 
-const labelPokemonCounter = document.querySelector('.screen-mid_poke-number-display')
-const labelPokemonName = document.querySelector('.pokedex-left_label-pokemon-name')
+const labelPokemonCounter = document.querySelector('.main__mid-display-pokeid')
+const labelPokemonName = document.querySelector('.main__pokemon-name-txt')
 const labelPokemonDesc = document.querySelector('.poke_right-description-text')
 
-const pokedexLights = document.querySelectorAll('.pokedex_light')
-const pokedexDetector = document.querySelector('.pokedex_detector')
+const pokedexLights = document.querySelectorAll('.pokedex__light')
+const pokedexDetector = document.querySelector('.main__top-detector')
 
 const containerBtnsBlue = document.querySelector('#containerBtnsBlue')
 const btnNum = document.querySelector('.poke_right-btn-blue')
 const btnNums = Array.from(document.querySelectorAll('.poke_right-btn-blue')) //nodelist doesn't have indexof 
 const btnRandom = document.querySelector('.pokedex_random-btn')
-const btnUp = document.querySelector('#box_cross-top')
+const btnUp = document.querySelector('#cross_box-top')
 const btnBottom = document.querySelector('#box_cross-bottom')
 const btnLeft = document.querySelector('#box_cross-left')
 const btnRight = document.querySelector('#box_cross-right')
